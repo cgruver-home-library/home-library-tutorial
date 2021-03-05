@@ -104,6 +104,10 @@ oc process home-library//create-simple-rolling-replace-quarkus-fast-jar-app -p A
 oc process home-library//create-simple-rolling-replace-quarkus-fast-jar-app -p APP_NAME=librarian -p GIT_REPOSITORY=https://github.com/lab-monkeys/librarian.git -p GIT_BRANCH=${BRANCH} | oc apply -n home-library -f -
 oc process home-library//create-simple-rolling-replace-quarkus-fast-jar-app -p APP_NAME=library -p GIT_REPOSITORY=https://github.com/lab-monkeys/library.git -p GIT_BRANCH=${BRANCH} | oc apply -n home-library -f -
 
+oc expose service catalog
+oc expose service bookshelf
+oc expose service librarian
+oc expose service library
 
 curl http://home-library-catalog-home-library.apps.okd4.oscluster.clgcom.org/bookCatalog/getBookInfo/9780062225740
 
@@ -300,4 +304,10 @@ podman push ${IMAGE_REGISTRY}/apicurio/apicurio-studio-ui:latest-release
 
 oc process --local -f apicurio/apicurio-postgres-template.yaml | oc apply -n apicurio -f -
 oc process --local -f apicurio/apicurio-template.yaml -p DOMAIN=apps.okd4.${LAB_DOMAIN}| oc apply -n apicurio -f -
+```
+
+## Add Kafka messaging
+
+```bash
+mvn quarkus:add-extension -Dextensions="smallrye-reactive-messaging-kafka"
 ```
