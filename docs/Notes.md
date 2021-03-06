@@ -324,12 +324,6 @@ https://github.com/scylladb/scylla-operator.git
 
 oc apply -f cert-manager.yaml
 
-oc new-project scylla-operator-system
-oc label namespace scylla-operator-system control-plane=controller-manager
-oc create sa scylla -n scylla-operator-system
-oc adm policy add-scc-to-user anyuid -z scylla -n scylla-operator-system
-oc adm policy add-role-to-user edit -z scylla -n scylla-operator-system
-
 # oc new project scylla-cql
 # oc policy add-role-to-user edit system:serviceaccount:scylla-operator-system:scylla -n scylla-cql
 
