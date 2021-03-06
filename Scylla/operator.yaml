@@ -1755,7 +1755,6 @@ webhooks:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
   name: scylla-operator-manager-role
 rules:
 - apiGroups:
@@ -1861,6 +1860,14 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+  - security.openshift.io 
+  resourceNames:
+  - anyuid
+  resources:
+  - securitycontextconstraints 
+  verbs: 
+  - use
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
