@@ -1,0 +1,113 @@
+# Namespace where the Scylla Cluster will be created
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: scylla-dynamodb
+
+---
+
+# Role for scylla members.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dynamo-cluster-member
+  namespace: scylla-dynamodb
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - patch
+      - watch
+  - apiGroups:
+      - "apps"
+    resources:
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - patch
+      - watch
+  - apiGroups:
+      - scylla.scylladb.com
+    resources:
+      - scyllaclusters
+    verbs:
+      - get
+
+---
+
+# ServiceAccount for scylla members.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dynamo-cluster-member
+  namespace: scylla-dynamodb
+
+---
+
+# RoleBinding for scylla members.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dynamo-cluster-member
+  namespace: scylla-dynamodb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dynamo-cluster-member
+subjects:
+  - kind: ServiceAccount
+    name: dynamo-cluster-member
+    namespace: scylla-dynamodb
+
+---
+
+# Simple Scylla Cluster
+apiVersion: scylla.scylladb.com/v1
+kind: ScyllaCluster
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: dynamo-cluster
+  namespace: scylla-dynamodb
+spec:
+  version: 4.2.0
+  alternator:
+    port: 8000
+    writeIsolation: only_rmw_uses_lwt
+  agentVersion: 2.2.0
+  developerMode: true
+  datacenter:
+    name: us-east-1
+    racks:
+      - name: us-east-1a
+        scyllaConfig: "scylla-config"
+        scyllaAgentConfig: "scylla-agent-config"
+        members: 3
+        storage:
+          capacity: 5Gi
+          storageClassName: rook-ceph-block
+        resources:
+          requests:
+            cpu: 1
+            memory: 1Gi
+          limits:
+            cpu: 1
+            memory: 1Gi
+        volumes:
+          - name: coredumpfs
+            hostPath:
+              path: /tmp/coredumps
+        volumeMounts:
+          - mountPath: /tmp/coredumps
+            name: coredumpfs

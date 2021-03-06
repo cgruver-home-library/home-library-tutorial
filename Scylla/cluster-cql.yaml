@@ -1,0 +1,29 @@
+# Simple Scylla Cluster
+apiVersion: scylla.scylladb.com/v1
+kind: ScyllaCluster
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: cql-cluster
+  namespace: scylla-cql
+spec:
+  version: 4.2.0
+  agentVersion: 2.2.0
+  developerMode: true
+  datacenter:
+    name: us-east-1
+    racks:
+      - name: us-east-1a
+        scyllaConfig: "scylla-config"
+        scyllaAgentConfig: "scylla-agent-config"
+        members: 3
+        storage:
+          capacity: 5Gi
+          storageClassName: rook-ceph-block
+        resources:
+          requests:
+            cpu: 1
+            memory: 1Gi
+          limits:
+            cpu: 1
+            memory: 1Gi
