@@ -1,4 +1,4 @@
-# Notes
+# Raw Notes Before Docs
 
 ## ODO
 
@@ -133,7 +133,10 @@ docker push ${IMAGE_REGISTRY}/home-library/home-library-catalog:latest
 ## Angular:
 
 ```bash
-ng new home-library-ui
+brew install node
+npm install -g @angular/cli
+
+ng new library
 
 ng generate component book-catalog
 ng generate component book-search

@@ -1,0 +1,15 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  name: book-event
+  labels:
+    strimz.io/cluster: home-library
+    strimzi.io/cluster: my-cluster
+  namespace: home-library
+spec:
+  config:
+    retention.ms: 604800000
+    segment.bytes: 1073741824
+  partitions: 10
+  replicas: 3
+  topicName: book-event
