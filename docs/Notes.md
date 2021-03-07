@@ -328,6 +328,7 @@ oc apply -f cert-manager.yaml
 # oc policy add-role-to-user edit system:serviceaccount:scylla-operator-system:scylla -n scylla-cql
 
 oc apply -f operator.yaml
-oc apply -f cluster.yaml
+oc apply -f cluster-cql.yaml
+oc apply -f cluster-dynamo.yaml
 
 ```

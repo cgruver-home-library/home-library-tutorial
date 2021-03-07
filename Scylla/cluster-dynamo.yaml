@@ -41,8 +41,18 @@ rules:
       - scylla.scylladb.com
     resources:
       - scyllaclusters
+      - scyllaclusters/finalizers
     verbs:
       - get
+      - update
+  - apiGroups:
+      - security.openshift.io 
+    resourceNames:
+      - privileged
+    resources:
+      - securitycontextconstraints 
+    verbs: 
+      - use
 
 ---
 
@@ -104,10 +114,4 @@ spec:
           limits:
             cpu: 1
             memory: 1Gi
-        volumes:
-          - name: coredumpfs
-            hostPath:
-              path: /tmp/coredumps
-        volumeMounts:
-          - mountPath: /tmp/coredumps
-            name: coredumpfs
+
