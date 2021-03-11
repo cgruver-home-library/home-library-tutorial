@@ -1,0 +1,81 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: home-library-catalog-network-policy
+  namespace: mariadb-galera
+spec:
+  podSelector: 
+    matchLabels:
+      app: mariadb-galera
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 3306
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            project: home-library
+        podSelector:
+          matchLabels:
+            app: catalog
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: home-library-librarian-network-policy
+  namespace: mariadb-galera
+spec:
+  podSelector: 
+    matchLabels:
+      app: mariadb-galera
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 3306
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            project: home-library
+        podSelector:
+          matchLabels:
+            app: librarian
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: home-library-bookshelf-network-policy
+  namespace: mariadb-galera
+spec:
+  podSelector: 
+    matchLabels:
+      app: mariadb-galera
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 3306
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            project: home-library
+        podSelector:
+          matchLabels:
+            app: bookshelf
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-namespace
+  namespace: mariadb-galera
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+      - podSelector: {}

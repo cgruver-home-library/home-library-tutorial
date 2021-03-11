@@ -58,3 +58,24 @@ oc expose service librarian
 
 curl http://catalog-home-library.apps.okd4.clg.lab/bookCatalog/getBookInfo/9780062225740 | jq
 ```
+
+1. Network Policies:
+
+```bash
+cd ~/Documents/VSCode/LabMonkeys/home-library-tutorial/network-policy
+
+oc apply -f mariadb-denyall.yaml
+```
+
+Show that the catalog app breaks.
+
+```bash
+oc apply -f mariadb-catalog.yaml
+```
+
+Show that the catalog app works.
+
+```bash
+oc apply -f mariadb-bookshelf.yaml
+oc apply -f mariadb-librarian.yaml
+```
