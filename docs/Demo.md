@@ -48,3 +48,13 @@ oc process openshift//create-rolling-replace-quarkus-fast-jar-app -p GIT_REPOSIT
 1. Show the pipeline run
 
 1. Show rollback, blue-green, etc...
+
+1. Expose services and test app.
+
+```bash
+oc expose service catalog
+oc expose service bookshelf
+oc expose service librarian
+
+curl http://catalog-home-library.apps.okd4.clg.lab/bookCatalog/getBookInfo/9780062225740 | jq
+```
