@@ -72,9 +72,15 @@ echo -n "librarian" | base64
 ## Git Mirror
 
 ```bash
-git clone --mirror https://github.com/lab-monkeys/catalog.git
-git remote set-url --push origin http://gitlab.clg.lab:8181/cgruver/catalog.git
-git push --mirror 
+GIT_LAB=http://gitlab.clg.lab:8181/cgruver/
+for i in catalog bookshelf librarian
+do
+  git clone --mirror https://github.com/lab-monkeys/${i}.git
+  cd ${i}.git
+  git remote set-url --push origin http://gitlab.clg.lab:8181/cgruver/${i}.git
+  git push --mirror --force
+  cd ..
+done
 ```
 
 ## Create a namespace:
@@ -109,7 +115,7 @@ oc expose service bookshelf
 oc expose service librarian
 oc expose service library
 
-curl http://home-library-catalog-home-library.apps.okd4.oscluster.clgcom.org/bookCatalog/getBookInfo/9780062225740
+curl http://home-library-catalog-home-library.apps.okd4.oscluster.clgcom.org/bookCatalog/getBookInfo/9780062225740 | jq
 
 # Remove Completed Pods
 oc delete pod --field-selector=status.phase==Succeeded -n home-library
@@ -324,11 +330,14 @@ https://github.com/scylladb/scylla-operator.git
 
 oc apply -f cert-manager.yaml
 
-# oc new project scylla-cql
-# oc policy add-role-to-user edit system:serviceaccount:scylla-operator-system:scylla -n scylla-cql
-
 oc apply -f operator.yaml
 oc apply -f cluster-cql.yaml
 oc apply -f cluster-dynamo.yaml
+
+```
+
+## Connect to Alternator
+
+```bash
 
 ```
