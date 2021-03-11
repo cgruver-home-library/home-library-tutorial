@@ -1,5 +1,7 @@
 # OpenShift Demo
 
+1. Create the Namespace:
+
 ```bash
 cd /Users/charrogruver/gitlab-test
 
@@ -8,7 +10,7 @@ cd /Users/charrogruver/gitlab-test
 
 Show NameSpace creation and pipeline resources
 
-Now create the Kafka Cluster
+1. Now create the Kafka Cluster
 
 ```bash
 oc apply -f kafka-cluster.yaml
@@ -16,15 +18,15 @@ oc apply -f kafka-cluster.yaml
 
 Show the Kafka Cluster deployment
 
-Now deploy the Topic
+1. Now deploy the Topic
 
 ```bash
-oc apply -f kafka-topic.yaml
+oc apply -f kafka-topics.yaml
 ```
 
 Show the topic creation from the Kafka Operator view
 
-Now deploy the application:
+1. Now deploy the application:
 
 ```bash
 BRANCH=main
@@ -33,8 +35,16 @@ oc process openshift//create-rolling-replace-quarkus-fast-jar-app -p GIT_REPOSIT
 oc process openshift//create-rolling-replace-quarkus-fast-jar-app -p GIT_REPOSITORY=git@gitlab.clg.lab:cgruver/librarian.git -p GIT_BRANCH=${BRANCH} | oc apply -n home-library -f -
 ```
 
-Show the pipelines and tasks
+1. Show the pipelines and tasks
 
-Make a change to Librarian and push the change.
+1. Show the Deployment
 
-Show the pipeline run
+1. Show the ImageStream
+
+* Traceability
+
+1. Make a change to Librarian and push the change.
+
+1. Show the pipeline run
+
+1. Show rollback, blue-green, etc...
