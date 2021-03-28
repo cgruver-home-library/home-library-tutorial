@@ -1,12 +1,11 @@
-QUARKUS_VERSION=${QUARKUS_VERSION:-1.10.5.Final}
+QUARKUS_VERSION=${QUARKUS_VERSION:-1.12.2.Final}
 JDK_VERSION=${JDK_VERSION:-11}
-SUREFIRE_VERSION=${SUREFIRE_VERSION:-2.22.1}
+SUREFIRE_VERSION=${SUREFIRE_VERSION:-3.0.0-M5}
 LOMBOK_VERSION=${LOMBOK_VERSION:-1.18.16}
-JANDEX_VERSION=${JANDEX_VERSION:-1.0.7}
 OWASP_VERSION=${OWASP_VERSION:-6.0.2}
-WIREMOCK_VERSION=${WIREMOCK_VERSION:-2.27.2}
-MAPSTRUCT_VERSION=${MAPSTRUCT_VERSION:-1.4.1.Final}
+MAPSTRUCT_VERSION=${MAPSTRUCT_VERSION:-1.4.2.Final}
 GIT_API=${GIT_API:-https://api.github.com/user/repos}
+GIT_KEYS=${GIT_KEYS:-${HOME}/.git_token}
 
 function createService() {
 
@@ -15,13 +14,13 @@ function createService() {
     touch README.md
     mkdir -p ./src/test/java/${GROUP_ID//.//}/${PROJECT}
     touch ./src/test/java/${GROUP_ID//.//}/.gitignore
-    mkdir -p ./src/main/java/${GROUP_ID//.//}/${PROJECT}/{aop,api,dto,colaborators,event,mapper,model}
-    touch ./src/main/java/${GROUP_ID//.//}/${PROJECT}/{aop,api,dto,colaborators,event,mapper,model}/.gitignore
+    mkdir -p ./src/main/java/${GROUP_ID//.//}/${PROJECT}/{aop,api,dto,colaborators,event,mapper,model,service}
+    touch ./src/main/java/${GROUP_ID//.//}/${PROJECT}/{aop,api,dto,colaborators,event,mapper,model,service}/.gitignore
     mkdir -p ./src/main/resources/META-INF/resources
     touch ./src/main/resources/META-INF/resources/.gitignore
     touch ./src/main/resources/application.yaml
     createServicePom
-    mvn quarkus:add-extension -Dextensions="quarkus-resteasy-jackson,quarkus-config-yaml,quarkus-rest-client,quarkus-hibernate-orm-panache,quarkus-smallrye-health"
+    mvn quarkus:add-extension -Dextensions="quarkus-resteasy-jackson,quarkus-config-yaml,quarkus-rest-client,quarkus-smallrye-health" -Dmaven.wagon.http.ssl.insecure=true
     gitInit ${PROJECT}
     cd ..
 }
@@ -130,11 +129,6 @@ cat << EOF > pom.xml
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>${GROUP_ID}</groupId>
-            <artifactId>${PROJECT}-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
@@ -143,12 +137,6 @@ cat << EOF > pom.xml
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-panache-mock</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock-jre8</artifactId>
-            <scope>test</scope>
-            <version>${WIREMOCK_VERSION}</version> 
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -268,15 +256,29 @@ case $i in
 esac
 done
 
-printf "GitHub User: "
-read GIT_USER
+# printf "GitHub User: "
+# read GIT_USER
 
-printf "GitHub Access Token: "
-stty -echo
-trap 'stty echo' EXIT
-read ACCESS_TOKEN
-stty echo
-trap - EXIT
-printf "\n"
+# printf "GitHub Access Token: "
+# stty -echo
+# trap 'stty echo' EXIT
+# read ACCESS_TOKEN
+# stty echo
+# trap - EXIT
+# printf "\n"
+
+for j in $(cat ${GIT_KEYS})
+do
+case $j in
+    user=*)
+    GIT_USER="${j#*=}"
+    ;;
+    token=*)
+    ACCESS_TOKEN="${j#*=}"
+    ;;
+    *)
+    ;;
+esac
+done
 
 createService
