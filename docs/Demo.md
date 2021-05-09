@@ -30,9 +30,10 @@ Show the topic creation from the Kafka Operator view
 
 ```bash
 BRANCH=main
-oc process openshift//create-rolling-replace-quarkus-fast-jar-app -p GIT_REPOSITORY=git@gitlab.clg.lab:cgruver/catalog.git -p GIT_BRANCH=${BRANCH} | oc apply -n home-library -f -
-oc process openshift//create-rolling-replace-quarkus-fast-jar-app -p GIT_REPOSITORY=git@gitlab.clg.lab:cgruver/bookshelf.git -p GIT_BRANCH=${BRANCH} | oc apply -n home-library -f -
-oc process openshift//create-rolling-replace-quarkus-fast-jar-app -p GIT_REPOSITORY=git@gitlab.clg.lab:cgruver/librarian.git -p GIT_BRANCH=${BRANCH} | oc apply -n home-library -f -
+GIT_URL=gitlab.dc1.clg.lab
+oc process openshift//create-rolling-replace-quarkus-fast-jar-app -p GIT_REPOSITORY=git@${GIT_URL}:cgruver/catalog.git -p GIT_BRANCH=${BRANCH} | oc apply -n home-library -f -
+oc process openshift//create-rolling-replace-quarkus-fast-jar-app -p GIT_REPOSITORY=git@${GIT_URL}:cgruver/bookshelf.git -p GIT_BRANCH=${BRANCH} | oc apply -n home-library -f -
+oc process openshift//create-rolling-replace-quarkus-fast-jar-app -p GIT_REPOSITORY=git@${GIT_URL}:cgruver/librarian.git -p GIT_BRANCH=${BRANCH} | oc apply -n home-library -f -
 ```
 
 1. Show the pipelines and tasks
