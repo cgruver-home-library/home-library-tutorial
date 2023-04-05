@@ -149,7 +149,7 @@ ng generate component book-search
 ng generate component book-info
 
 ng generate service book-info
-
+ng generate environments
 ng serve --open
 ```
 
